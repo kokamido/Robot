@@ -24,12 +24,14 @@ public class World {
 	}
 	
 	public double go(){
-		robotAI = new SimpleAI(target);
+//		robotAI = new SimpleAI(target);
 		while(!robotAI.isReached(robot)){
 			Command cmd = robotAI.nextCmd(robot, target);
-			System.out.println(cmd);
 			robot = processPath(robot, cmd);
-			System.out.println(robot.getPos());
+			System.out.println(cmd+" "+robot.getPos());
+			if(robotAI instanceof EasyAIwithNoises){
+				System.out.println(((EasyAIwithNoises)robotAI).getWall());
+			}
 		}
 		return robotAI.getTime();
 	}

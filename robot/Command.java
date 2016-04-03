@@ -12,6 +12,6 @@ public class Command {
 	}
 	
 	public String toString(){
-		return "Speed: "+speed+"RSpeed: "+rotationSpeed+"Time: "+time;
+		return "Speed: "+speed+" RSpeed: "+rotationSpeed+" Time: "+time;
 	}
 }

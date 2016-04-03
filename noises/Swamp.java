@@ -30,7 +30,4 @@ public class Swamp extends AreaObject{
 				robot.angle, robot.radius, robot.getPos());
 	}
 	
-	public boolean isActive(Robot robot){
-		return crossOverRobot(robot);
-	}
 }

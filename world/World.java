@@ -2,14 +2,11 @@ package world;
 
 import robot.Robot;
 import robot.Command;
-import noises.Anomaly;
-import noises.NoiseGenerator;
-import robotAI.RobotAI;
-import robotAI.SimpleAI;
+import noises.*;
+import robotAI.*;
 import java.util.Vector;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 public class World {
 	private Robot robot;
@@ -29,7 +26,10 @@ public class World {
 	public double go(){
 		robotAI = new SimpleAI(target);
 		while(!robotAI.isReached(robot)){
-			robot = processPath(robot, robotAI.nextCmd(robot, target));
+			Command cmd = robotAI.nextCmd(robot, target);
+			System.out.println(cmd);
+			robot = processPath(robot, cmd);
+			System.out.println(robot.getPos());
 		}
 		return robotAI.getTime();
 	}
@@ -59,15 +59,23 @@ public class World {
 			Robot bufRobot = robot;
 			for(int i = 0; i < intervalNum; i++){
 				bufCommand = new Command(cmd.speed, cmd.rotationSpeed, timeStep);
-				bufRobot = affect(bufRobot);
+				/*bufRobot = affect(bufRobot);
+				bufRobot = bufRobot.move(bufCommand);*/
+				Robot buffRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
+						robot.radius, bufRobot.getPos());
+				buffRobot = buffRobot.move(bufCommand);
+				buffRobot = affect(buffRobot);
+				bufRobot = new Robot(buffRobot.maxRotationSpeed, buffRobot.maxSpeed, 
+						buffRobot.angle,buffRobot.radius, bufRobot.getPos());
+//				if(bufRobot.maxSpeed<1){System.out.println(bufRobot.maxSpeed);}
 				bufRobot = bufRobot.move(bufCommand);
-				bufRobot = new Robot(robot.maxSpeed, robot.maxRotationSpeed, robot.angle,
+				bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
 						robot.radius, bufRobot.getPos());
 			}
 			bufCommand = new Command(cmd.speed, cmd.rotationSpeed, timeExcess);
 			bufRobot = affect(bufRobot);
 			bufRobot = bufRobot.move(bufCommand);
-			bufRobot = new Robot(robot.maxSpeed, robot.maxRotationSpeed, robot.angle,
+			bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
 					robot.radius, bufRobot.getPos());
 			return bufRobot;
 		}
@@ -76,7 +84,7 @@ public class World {
 	}
 	
 	private Robot affect(Robot robot){
-		Robot epsRobot = new Robot(robot.maxSpeed, robot.maxRotationSpeed, robot.angle,
+		Robot epsRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
 				robot.radius+epsilon, robot.getPos());
 		Robot res = robot;
 		Iterator<Anomaly> anomalyIter = anomaly.iterator();
@@ -84,9 +92,12 @@ public class World {
 			Anomaly buf = anomalyIter.next();
 			if (buf.isActive(epsRobot)){
 				res = buf.affect(res);
+				if((robotAI instanceof EasyAIwithNoises)&&(buf instanceof Wall)){
+					((EasyAIwithNoises) robotAI).setWall((Wall)buf);
+				}
 			}
 		}
-			return res;
+		return res;
 	}
 	
 	private Command noiseCommand(Command cmd){

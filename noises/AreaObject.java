@@ -16,13 +16,13 @@ public abstract class AreaObject implements Anomaly {
 		this.radius = radius;
 	}
 	
-	public boolean crossOverRobot(Robot robot){
+	public boolean isActive(Robot robot){
 		return(MyMath.distance(robot.getPos(),getPos())<=(robot.radius+radius));
 	}
 	
 	abstract public Robot affect(Robot robot);
 	
-	private Vector<Double> getPos(){
+	public Vector<Double> getPos(){
 		Vector<Double> res = new Vector<Double>();
 		res.add(xCenterCoord);
 		res.add(yCenterCoord);

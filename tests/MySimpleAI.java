@@ -65,9 +65,11 @@ public class MySimpleAI{
 		target.set(1,0.0);
 		Swamp swampr2m05 = new Swamp(0,0,2,0.5);
 		Swamp swampr1m05 = new Swamp(6,0,1,0.5);
+		ENoise noise01 = new ENoise(0.001);
 		World eden = new World(new Robot(1,1,0,1,0,0), new SimpleAI(target), target,0.001);
 		eden.addAnomaly(swampr2m05);
 		eden.addAnomaly(swampr1m05);
+		//eden.addNoise(noise01);
 		assertEquals(eden.go(),7,0.01);
 	}
 	/*

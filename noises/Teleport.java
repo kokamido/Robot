@@ -31,4 +31,9 @@ public class Teleport extends AreaObject{
 		res.add(newY);
 		return res;
 	}
+
+	@Override
+	public String getType() {
+		return "Teleport";
+	}
 }

@@ -19,13 +19,13 @@ public class MySimpleAI{
 		target.add(5.0);
 	}
 		
-	@Test
+	/*@Test
 	public void plusPi4Sqrt50(){
 		target.set(0, 5.0);
 		target.set(1, 5.0);	
 		World eden = new World(new Robot(1,1,0,1,0,0), new SimpleAI(target), target,0.001);
 		assertEquals(eden.go(),Math.PI/4+Math.sqrt(50)-1,0.0000001);
-	}
+	}*/
 	
 	@Test
 	public void plus3Pi4sqrt50(){
@@ -63,10 +63,12 @@ public class MySimpleAI{
 	public void swampTest(){
 		target.set(0,5.0);
 		target.set(1,0.0);
-		Swamp swampr1m05 = new Swamp(0,0,1,0.5);
+		Swamp swampr2m05 = new Swamp(0,0,2,0.5);
+		Swamp swampr1m05 = new Swamp(6,0,1,0.5);
 		World eden = new World(new Robot(1,1,0,1,0,0), new SimpleAI(target), target,0.001);
+		eden.addAnomaly(swampr2m05);
 		eden.addAnomaly(swampr1m05);
-		assertEquals(eden.go(),6,0.01);
+		assertEquals(eden.go(),7,0.01);
 	}
 	/*
 	@Test

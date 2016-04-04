@@ -8,6 +8,10 @@ public class Wall extends AreaObject {
 	public Wall(double xCenter, double yCenter, double radius){
 		super(xCenter, yCenter,radius);
 	}
+	
+	public String getType(){
+		return "Wall";
+	}
 
 	public Robot affect(Robot robot){
 		return new Robot(robot.maxRotationSpeed, 0,

@@ -4,7 +4,13 @@ import robot.Robot;
 import robot.Command;
 import noises.*;
 import robotAI.*;
+import draw.WorldAnimation;
+import draw.Screen;
+import draw.ScreenResolution;
 import java.util.Vector;
+
+import javax.swing.JFrame;
+
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -12,8 +18,11 @@ public class World {
 	private Robot robot;
 	private RobotAI robotAI;
 	private Vector<Double> target;
-	private HashSet<Anomaly> anomaly = new HashSet<Anomaly>();
+	private HashSet<AreaObject> anomaly = new HashSet<AreaObject>();
 	private HashSet<NoiseGenerator> noises = new HashSet<NoiseGenerator>();
+	private WorldAnimation animation;
+	private JFrame window = new JFrame("Robot");
+	private Screen screen = new Screen();
 	public final double epsilon;
 	
 	public World(Robot robot, RobotAI robotAI, Vector<Double> target,double epsilon){
@@ -21,14 +30,20 @@ public class World {
 		this.robotAI = robotAI;
 		this.target = target;
 		this.epsilon = epsilon;
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(ScreenResolution.getSize("width"), ScreenResolution.getSize("height"));
+		window.setLocationRelativeTo(null);
+		window.add(screen);
+		window.setVisible(true);
 	}
 	
 	public double go(){
-//		robotAI = new SimpleAI(target);
+		animation = new WorldAnimation(anomaly, robot, 20, target.get(0),target.get(1));
+		animation.animate(screen);
+		draw(screen,40);
 		while(!robotAI.isReached(robot)){
 			Command cmd = robotAI.nextCmd(robot, target);
 			robot = processPath(robot, cmd);
-			System.out.println(cmd+" "+robot.getPos());
 			if(robotAI instanceof EasyAIwithNoises){
 				System.out.println(((EasyAIwithNoises)robotAI).getWall());
 			}
@@ -36,7 +51,7 @@ public class World {
 		return robotAI.getTime();
 	}
 	
-	public void addAnomaly(Anomaly anom){
+	public void addAnomaly(AreaObject anom){
 		anomaly.add(anom);
 	}
 	
@@ -61,35 +76,49 @@ public class World {
 			Robot bufRobot = robot;
 			for(int i = 0; i < intervalNum; i++){
 				bufCommand = new Command(cmd.speed, cmd.rotationSpeed, timeStep);
-				/*bufRobot = affect(bufRobot);
-				bufRobot = bufRobot.move(bufCommand);*/
 				Robot buffRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
 						robot.radius, bufRobot.getPos());
 				buffRobot = buffRobot.move(bufCommand);
 				buffRobot = affect(buffRobot);
 				bufRobot = new Robot(buffRobot.maxRotationSpeed, buffRobot.maxSpeed, 
 						buffRobot.angle,buffRobot.radius, bufRobot.getPos());
-//				if(bufRobot.maxSpeed<1){System.out.println(bufRobot.maxSpeed);}
+				animation.setRobot(bufRobot);
 				bufRobot = bufRobot.move(bufCommand);
 				bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
 						robot.radius, bufRobot.getPos());
+				if(i % 3 == 0){
+					draw(screen, 1);
+					window.repaint();
+				}
 			}
 			bufCommand = new Command(cmd.speed, cmd.rotationSpeed, timeExcess);
 			bufRobot = affect(bufRobot);
 			bufRobot = bufRobot.move(bufCommand);
 			bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
 					robot.radius, bufRobot.getPos());
+			animation.setRobot(bufRobot);
+			draw(screen, 1);
 			return bufRobot;
 		}
-		else
+		else{
+			double step = cmd.time/20;
+			Robot bufRobot = robot;
+			animation.setRobot(bufRobot);
+			for(int i = 0; i<20; i++){
+				bufRobot = bufRobot.move(new Command(0, cmd.rotationSpeed, step));
+				animation.setRobot(bufRobot);
+				draw(screen,(int)(30+20*cmd.rotationSpeed));
+				window.repaint();
+			}
 			return robot.move(cmd);
+		}
 	}
 	
 	private Robot affect(Robot robot){
 		Robot epsRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
 				robot.radius+epsilon, robot.getPos());
 		Robot res = robot;
-		Iterator<Anomaly> anomalyIter = anomaly.iterator();
+		Iterator<AreaObject> anomalyIter = anomaly.iterator();
 		while(anomalyIter.hasNext()){
 			Anomaly buf = anomalyIter.next();
 			if (buf.isActive(epsRobot)){
@@ -109,5 +138,11 @@ public class World {
 			res = noiseIter.next().changeCmd(res);
 		}
 		return res;
+	}
+	
+	private void draw(Screen screen, int step){
+		animation.animate(screen);
+		double time = System.currentTimeMillis();
+		while(time+step>System.currentTimeMillis()){}
 	}
 }

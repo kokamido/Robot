@@ -25,6 +25,10 @@ public class Swamp extends AreaObject{
 		}
 	}
 	
+	public String getType(){
+		return "Swamp";
+	}
+	
 	public Robot affect(Robot robot){
 		return new Robot(robot.maxRotationSpeed, robot.maxSpeed*speedReduction,
 				robot.angle, robot.radius, robot.getPos());

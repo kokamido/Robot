@@ -16,6 +16,8 @@ public abstract class AreaObject implements Anomaly {
 		this.radius = radius;
 	}
 	
+	public abstract String getType();
+	
 	public boolean isActive(Robot robot){
 		return(MyMath.distance(robot.getPos(),getPos())<=(robot.radius+radius));
 	}

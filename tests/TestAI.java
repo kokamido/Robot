@@ -14,6 +14,6 @@ public class TestAI extends SimpleAI implements RobotAI{
 
 	@Override
 	public Command nextCmd(Robot robot, Vector<Double> target) {
-		return new Command(1,1,1);
+		return new Command(1,1,2);
 	}
 }

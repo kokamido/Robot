@@ -18,7 +18,7 @@ public class God {
 		target.add(5.0);
 		target.add(5.0);
 	}
-		
+		/*
 	@Test
 	public void plusPi4Sqrt50(){
 		target.set(0, 5.0);
@@ -68,14 +68,16 @@ public class God {
 		eden.addAnomaly(swampr1m05);
 		assertEquals(eden.go(),6,0.01);
 	}
-	
+	*/
 	@Test
 	public void wallTest(){
-		target.set(0,5.0);
+		target.set(0,9.0);
 		target.set(1,0.0);
-		Wall wallr1 = new Wall(3,0,1);
-		World eden = new World(new Robot(1,1,0,1,0,0), new EasyAIwithNoises(target), target,0.001);
+		Wall wallr1 = new Wall(4,0,1);
+	//	Wall wallr3 = new Wall(6,2,2);
+		World eden = new World(new Robot(1,1,Math.PI/2,1,0,0), new EasyAIwithNoises(target), target,0.001);
 		eden.addAnomaly(wallr1);
+		//eden.addAnomaly(wallr3);
 		assertEquals(eden.go(),6,0.01);
 	}
 	

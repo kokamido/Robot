@@ -29,7 +29,7 @@ public class WorldAnimation implements Animation{
 		screen.clear();
 		for(AreaObject i : relief){
 			if((Math.abs(i.xCenterCoord-robot.x)-i.radius<
-					ScreenResolution.getSize("width")/scale)||
+					ScreenResolution.getSize("width")/scale)&&
 					(Math.abs(i.yCenterCoord-robot.y)-i.radius<
 							ScreenResolution.getSize("height")/scale)){
 				screen.addDrawable(new Circle((i.xCenterCoord-robot.x)*scale+ScreenResolution.getSize("width")/2,
@@ -39,7 +39,7 @@ public class WorldAnimation implements Animation{
 		}
 		screen.addDrawable(new RobotPicture(robot, scale));
 		screen.addDrawable(new Circle((targetX - robot.x)*scale+ScreenResolution.getSize("width")/2,
-				(targetY-robot.y)*scale+ScreenResolution.getSize("height")/2, 5, Color.CYAN));
+				(targetY-robot.y)*scale+ScreenResolution.getSize("height")/2, 5, Color.ORANGE));
 	}
 	
 	public void setRobot(Robot robot){

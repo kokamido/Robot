@@ -28,6 +28,7 @@ public class CoordTest {
 	public void testMove2(){
 		Robot robot = new Robot(1,1,Math.PI/2.0,1,0,0);
 		Command cmd = new Command(1,-0.1,5*Math.PI);
+		System.out.println(robot.move(cmd).getPos().get(1));
 		assertEquals(robot.move(cmd).getPos().get(0),10,0.001);
 		assertEquals(robot.move(cmd).getPos().get(1),10,0.001);
 	}

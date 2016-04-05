@@ -76,25 +76,35 @@ public class World {
 			Robot bufRobot = robot;
 			for(int i = 0; i < intervalNum; i++){
 				bufCommand = new Command(cmd.speed, cmd.rotationSpeed, timeStep);
-				Robot buffRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
-						robot.radius, bufRobot.getPos());
+				Robot buffRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed, 
+						bufRobot.angle, robot.radius, bufRobot.getPos());
 				buffRobot = buffRobot.move(bufCommand);
 				buffRobot = affect(buffRobot);
 				bufRobot = new Robot(buffRobot.maxRotationSpeed, buffRobot.maxSpeed, 
-						buffRobot.angle,buffRobot.radius, bufRobot.getPos());
+						bufRobot.angle,bufRobot.radius, bufRobot.getPos());
 				animation.setRobot(bufRobot);
 				bufRobot = bufRobot.move(bufCommand);
-				bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
+				bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  bufRobot.angle,
 						robot.radius, bufRobot.getPos());
-				if(i % 3 == 0){
-					draw(screen, 1);
+				if(i % 10 == 0){
+					draw(screen, 5);
 					window.repaint();
 				}
 			}
 			bufCommand = new Command(cmd.speed, cmd.rotationSpeed, timeExcess);
-			bufRobot = affect(bufRobot);
+			/*bufRobot = affect(bufRobot);
 			bufRobot = bufRobot.move(bufCommand);
-			bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  robot.angle,
+			bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  bufRobot.angle,
+					robot.radius, bufRobot.getPos());*/
+			Robot buffRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed, 
+					bufRobot.angle, robot.radius, bufRobot.getPos());
+			buffRobot = buffRobot.move(bufCommand);
+			buffRobot = affect(buffRobot);
+			bufRobot = new Robot(buffRobot.maxRotationSpeed, buffRobot.maxSpeed, 
+					bufRobot.angle,bufRobot.radius, bufRobot.getPos());
+			animation.setRobot(bufRobot);
+			bufRobot = bufRobot.move(bufCommand);
+			bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  bufRobot.angle,
 					robot.radius, bufRobot.getPos());
 			animation.setRobot(bufRobot);
 			draw(screen, 1);

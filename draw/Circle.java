@@ -39,7 +39,7 @@ public class Circle implements Drawable{
 	
 	public void draw(Graphics2D g){
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		Ellipse2D el = new Ellipse2D.Double(Math.max(x-rad,0), Math.max(y-rad,0), 2*rad, 2*rad);
+		Ellipse2D el = new Ellipse2D.Double(/*(Math.max(x-rad,0)*/x-rad, /*Math.max(y-rad,0)*/y-rad, 2*rad, 2*rad);
 		g.setPaint(color);
 		g.fill(el);
 	}

@@ -67,6 +67,12 @@ public class WorldAnimation implements Animation{
 		else if(obj.getType().equals("Wall")){
 			return Color.GRAY;
 		}
+		else if(obj.getType().equals("Teleport")){
+			return Color.MAGENTA;
+		}
+		else if(obj.getType().equals("Jumper")){
+			return Color.YELLOW;
+		}
 		else{
 			return Color.RED;
 		}

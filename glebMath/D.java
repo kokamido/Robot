@@ -19,12 +19,12 @@ public class D {
 	}
 
 	public static double angle(Position pos1, Position pos2) {
-		double angl = (Math.acos(D.x(pos1, pos2) / D.l(pos1, pos2))) * Math.signum(D.y(pos1, pos2)) % (Math.PI);
+		double angl = (Math.acos(D.x(pos1, pos2) / D.l(pos1, pos2))) * Math.signum(D.y(pos1, pos2));
 		return angl;
 	}
 
 	public static double w(double angle1, double angle2) {
-		return (angle2 % Math.PI) - (angle1 % Math.PI);
+		return Angle.normalizer(angle2) - Angle.normalizer(angle1);
 	}
 
 	public static double r(Position pos1, Position pos2, Position pos3) {

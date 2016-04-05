@@ -70,7 +70,7 @@ public class Robot {
 	}
 
 	// расчет движения по дуге
-	private Vector<Double> getNewPos(Command cmd, double speed, double rotationSpeed, double time) {
+	/*private Vector<Double> getNewPos(Command cmd, double speed, double rotationSpeed, double time) {
 		double rad = Math.abs(speed / rotationSpeed);
 		double rotAngle = Math.abs(rotationSpeed * time);
 		Vector<Double> newCoords = new Vector<Double>();
@@ -99,6 +99,6 @@ public class Robot {
 			newCoords.set(1, rotCoords.get(1) + y + rad * Math.signum(rotationSpeed) * Math.cos(angle));
 		}
 		return newCoords;
-	}
+	}*/
 
 }

@@ -14,8 +14,8 @@ public class ENoise implements NoiseGenerator{
 	}
 	
 	public Command changeCmd(Command cmd){
-		return new Command(cmd.speed+amplitude*rand.nextInt(100000)/100000,
-				cmd.rotationSpeed+amplitude*rand.nextInt(100000)/100000,
+		return new Command(cmd.speed+amplitude*rand.nextInt(10)/10,
+				cmd.rotationSpeed+amplitude*rand.nextInt(10)/10,
 				cmd.time);
 	}
 }

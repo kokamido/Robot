@@ -5,6 +5,7 @@ import robot.Command;
 import noises.*;
 import robotAI.*;
 import draw.WorldAnimation;
+import math.MyMath;
 import draw.Screen;
 import draw.ScreenResolution;
 import java.util.Vector;
@@ -67,12 +68,29 @@ public class World {
 			//дроблю путь на кривые, длиной не превышающие эпсилон и еду по ним
 			//аффектя робота на каждом шаге
 			double distance = cmd.time*cmd.speed;
+			//
+			double dw = cmd.time*cmd.rotationSpeed;
+			//
 			int intervalNum = (int)Math.floor(distance / epsilon);
 			double timeExcess = cmd.time;
 			double timeStep = 0;
-			if(intervalNum>0){
-				timeExcess = cmd.time*(distance - intervalNum*epsilon)/distance;
-				timeStep = (cmd.time-timeExcess)/intervalNum;
+			if(distance>dw){
+				intervalNum = (int)Math.floor(distance / epsilon);
+				timeExcess = cmd.time;
+				timeStep = 0;
+				if(intervalNum>0){
+					timeExcess = cmd.time*(distance - intervalNum*epsilon)/distance;
+					timeStep = (cmd.time-timeExcess)/intervalNum;
+				}
+			}
+			else{
+				intervalNum = (int)Math.floor(dw / epsilon);
+				timeExcess = cmd.time;
+				timeStep = 0;
+				if(intervalNum>0){
+					timeExcess = cmd.time*(dw - intervalNum*epsilon)/dw;
+					timeStep = (cmd.time-timeExcess)/intervalNum;
+				}
 			}
 			Command bufCommand;
 			Robot bufRobot = robot;
@@ -82,22 +100,24 @@ public class World {
 						bufRobot.angle, robot.radius, bufRobot.getPos());
 				buffRobot = buffRobot.move(bufCommand);
 				buffRobot = affect(buffRobot);
+				if(MyMath.distance(buffRobot.getPos(), bufRobot.getPos())<=2*epsilon){
 				bufRobot = new Robot(buffRobot.maxRotationSpeed, buffRobot.maxSpeed, 
 						bufRobot.angle,bufRobot.radius, bufRobot.getPos());
+				}
+				else{
+					bufRobot = new Robot(buffRobot.maxRotationSpeed, buffRobot.maxSpeed, 
+							bufRobot.angle,bufRobot.radius, buffRobot.getPos());
+				}
 				animation.setRobot(bufRobot);
 				bufRobot = bufRobot.move(bufCommand);
 				bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  bufRobot.angle,
 						robot.radius, bufRobot.getPos());
-				if(i % 40 == 0){
+				if(i % 4 == 0){
 					draw(screen, speed);
 					window.repaint();
 				}
 			}
 			bufCommand = new Command(cmd.speed, cmd.rotationSpeed, timeExcess);
-			/*bufRobot = affect(bufRobot);
-			bufRobot = bufRobot.move(bufCommand);
-			bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  bufRobot.angle,
-					robot.radius, bufRobot.getPos());*/
 			Robot buffRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed, 
 					bufRobot.angle, robot.radius, bufRobot.getPos());
 			buffRobot = buffRobot.move(bufCommand);
@@ -110,6 +130,25 @@ public class World {
 					robot.radius, bufRobot.getPos());
 			animation.setRobot(bufRobot);
 			draw(screen, speed);
+		/*	if(timeExcess*cmd.rotationSpeed>0.01){
+				double num = timeExcess*cmd.rotationSpeed/0.01;
+				for(int i = 0; i<num; i++){
+					bufCommand = new Command(cmd.speed, cmd.rotationSpeed, timeExcess/num);
+					Robot buffRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed, 
+							bufRobot.angle, robot.radius, bufRobot.getPos());
+					buffRobot = buffRobot.move(bufCommand);
+					buffRobot = affect(buffRobot);
+					bufRobot = new Robot(buffRobot.maxRotationSpeed, buffRobot.maxSpeed, 
+							bufRobot.angle,bufRobot.radius, bufRobot.getPos());
+					animation.setRobot(bufRobot);
+					bufRobot = bufRobot.move(bufCommand);
+					bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  bufRobot.angle,
+							robot.radius, bufRobot.getPos());
+					animation.setRobot(bufRobot);
+					draw(screen, speed);
+				}
+				return bufRobot;
+			}*/
 			return bufRobot;
 		}
 		else{
@@ -134,11 +173,14 @@ public class World {
 		Robot res = robot;
 		Iterator<AreaObject> anomalyIter = anomaly.iterator();
 		while(anomalyIter.hasNext()){
-			Anomaly buf = anomalyIter.next();
+			AreaObject buf = anomalyIter.next();
 			if (buf.isActive(epsRobot)){
 				res = buf.affect(res);
-				if((robotAI instanceof EasyAIwithNoises)&&(buf instanceof Wall)){
+				if((robotAI instanceof EasyAIwithNoises)&&(buf.getType().equals("Wall"))){
 					((EasyAIwithNoises) robotAI).setWall((Wall)buf);
+				}
+				else if(buf.getType().equals("Teleport")){
+					((EasyAIwithNoises) robotAI).setWall(null);
 				}
 			}
 		}
@@ -147,14 +189,9 @@ public class World {
 	
 	private Command noiseCommand(Command cmd){
 		Command res = cmd;
-		//Iterator<NoiseGenerator> noiseIter = noises.iterator();
-		/*while(noiseIter.hasNext()){
-			res = noiseIter.next().changeCmd(res);
-		}*/
 		for(NoiseGenerator i : noises){
 			res = i.changeCmd(res);
 		}
-		System.out.println("CHANGED "+res);
 		return res;
 	}
 	

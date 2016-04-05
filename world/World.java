@@ -23,13 +23,15 @@ public class World {
 	private WorldAnimation animation;
 	private JFrame window = new JFrame("Robot");
 	private Screen screen = new Screen();
+	private int speed;
 	public final double epsilon;
 	
-	public World(Robot robot, RobotAI robotAI, Vector<Double> target,double epsilon){
+	public World(Robot robot, RobotAI robotAI, Vector<Double> target,double epsilon, int speed){
 		this.robot = robot;
 		this.robotAI = robotAI;
 		this.target = target;
 		this.epsilon = epsilon;
+		this.speed = speed;
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(ScreenResolution.getSize("width"), ScreenResolution.getSize("height"));
 		window.setLocationRelativeTo(null);
@@ -44,9 +46,9 @@ public class World {
 		while(!robotAI.isReached(robot)){
 			Command cmd = robotAI.nextCmd(robot, target);
 			robot = processPath(robot, cmd);
-			if(robotAI instanceof EasyAIwithNoises){
+			/*if(robotAI instanceof EasyAIwithNoises){
 				System.out.println(((EasyAIwithNoises)robotAI).getWall());
-			}
+			}*/
 		}
 		return robotAI.getTime();
 	}
@@ -86,8 +88,8 @@ public class World {
 				bufRobot = bufRobot.move(bufCommand);
 				bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  bufRobot.angle,
 						robot.radius, bufRobot.getPos());
-				if(i % 10 == 0){
-					draw(screen, 5);
+				if(i % 40 == 0){
+					draw(screen, speed);
 					window.repaint();
 				}
 			}
@@ -107,18 +109,20 @@ public class World {
 			bufRobot = new Robot(robot.maxRotationSpeed, robot.maxSpeed,  bufRobot.angle,
 					robot.radius, bufRobot.getPos());
 			animation.setRobot(bufRobot);
-			draw(screen, 1);
+			draw(screen, speed);
 			return bufRobot;
 		}
 		else{
-			double step = cmd.time/20;
+			double step = cmd.time/200;
 			Robot bufRobot = robot;
 			animation.setRobot(bufRobot);
-			for(int i = 0; i<20; i++){
+			for(int i = 0; i<200; i++){
 				bufRobot = bufRobot.move(new Command(0, cmd.rotationSpeed, step));
-				animation.setRobot(bufRobot);
-				draw(screen,(int)(30+20*cmd.rotationSpeed));
-				window.repaint();
+				if(i % 3 == 0){
+					animation.setRobot(bufRobot);
+					draw(screen,speed);
+					window.repaint();
+				}
 			}
 			return robot.move(cmd);
 		}
@@ -143,10 +147,14 @@ public class World {
 	
 	private Command noiseCommand(Command cmd){
 		Command res = cmd;
-		Iterator<NoiseGenerator> noiseIter = noises.iterator();
-		while(noiseIter.hasNext()){
+		//Iterator<NoiseGenerator> noiseIter = noises.iterator();
+		/*while(noiseIter.hasNext()){
 			res = noiseIter.next().changeCmd(res);
+		}*/
+		for(NoiseGenerator i : noises){
+			res = i.changeCmd(res);
 		}
+		System.out.println("CHANGED "+res);
 		return res;
 	}
 	

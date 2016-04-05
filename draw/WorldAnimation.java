@@ -28,13 +28,27 @@ public class WorldAnimation implements Animation{
 	public void animate(Screen screen){
 		screen.clear();
 		for(AreaObject i : relief){
-			if((Math.abs(i.xCenterCoord-robot.x)-i.radius<
-					ScreenResolution.getSize("width")/scale)&&
-					(Math.abs(i.yCenterCoord-robot.y)-i.radius<
-							ScreenResolution.getSize("height")/scale)){
-				screen.addDrawable(new Circle((i.xCenterCoord-robot.x)*scale+ScreenResolution.getSize("width")/2,
-						(i.yCenterCoord-robot.y)*scale+ScreenResolution.getSize("height")/2,
-						i.radius*scale, getColor(i)));
+			if(i.getType().equals("Swamp")){
+				if((Math.abs(i.xCenterCoord-robot.x)-i.radius<
+						ScreenResolution.getSize("width")/scale)&&
+						(Math.abs(i.yCenterCoord-robot.y)-i.radius<
+								ScreenResolution.getSize("height")/scale)){
+					screen.addDrawable(new Circle((i.xCenterCoord-robot.x)*scale+ScreenResolution.getSize("width")/2,
+							(i.yCenterCoord-robot.y)*scale+ScreenResolution.getSize("height")/2,
+							i.radius*scale, getColor(i)));
+				}
+			}
+		}
+		for(AreaObject i : relief){
+			if(!i.getType().equals("Swamp")){
+				if((Math.abs(i.xCenterCoord-robot.x)-i.radius<
+						ScreenResolution.getSize("width")/scale)&&
+						(Math.abs(i.yCenterCoord-robot.y)-i.radius<
+								ScreenResolution.getSize("height")/scale)){
+					screen.addDrawable(new Circle((i.xCenterCoord-robot.x)*scale+ScreenResolution.getSize("width")/2,
+							(i.yCenterCoord-robot.y)*scale+ScreenResolution.getSize("height")/2,
+							i.radius*scale, getColor(i)));
+				}
 			}
 		}
 		screen.addDrawable(new RobotPicture(robot, scale));

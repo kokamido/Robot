@@ -68,18 +68,33 @@ public class God {
 		eden.addAnomaly(swampr1m05);
 		assertEquals(eden.go(),6,0.01);
 	}
-	*/
+	
 	@Test
 	public void wallTest(){
 		target.set(0,9.0);
 		target.set(1,0.0);
-		Wall wallr1 = new Wall(4,0,1);
-	//	Wall wallr3 = new Wall(6,2,2);
-		World eden = new World(new Robot(1,1,Math.PI/2,1,0,0), new EasyAIwithNoises(target), target,0.001);
+		Wall wallr1 = new Wall(6,-2,0.8);
+		Wall wallr3 = new Wall(6,2,2);
+		Wall wallr4 = new Wall(9,-3,1);
+		Swamp sw = new Swamp(0,0,9,0.8);
+		NoiseGenerator noise = new ENoise(0.01);
+		World eden = new World(new Robot(1,1,Math.PI/2,1,0,0), new EasyAIwithNoises(target), target,0.001, 	10);
+		//eden.addNoise(noise);
 		eden.addAnomaly(wallr1);
-		//eden.addAnomaly(wallr3);
+		eden.addAnomaly(wallr3);
+	//	eden.addAnomaly(wallr4);
+		eden.addAnomaly(sw);
 		assertEquals(eden.go(),6,0.01);
 	}
+	*/
 	
-}
+	@Test
+	public void unfairTarget(){
+		target.set(0,0.0);
+		target.set(1,0.0);
+		World unfair = new World(new Robot(1,1,0,1,0,0), new EasyRobotAI(target), target,0.001, 10);
+		assertEquals(unfair.go(),2+Math.PI+1,0.0000001);
 
+	}
+
+}

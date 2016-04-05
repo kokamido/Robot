@@ -32,13 +32,13 @@ public class EasyAIwithNoises extends SimpleAI {
 	public robot.Command getCommand(Robot robot, Position finish) {
 		robot.Command cmd;
 		if (lastWall == null){
-			System.out.println("да ну нах");
+			//System.out.println("пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ");
 			RobotAI easyAI = new EasyRobotAI(super.target);
 			cmd = easyAI.nextCmd(robot, Converter.positionToMe(finish));
 			return cmd;
 		}
 	
-		System.out.println("бля, ебаная стена");
+		//System.out.println("пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ");
 
 	
 	
@@ -47,11 +47,11 @@ public class EasyAIwithNoises extends SimpleAI {
 		if ((dr > 0) || (Math.abs(D.w(D.angle(Converter.positionToGleb(robot.getPos()), finish),
 			
 				D.angle(Converter.positionToGleb(robot.getPos()), Converter.positionToGleb(lastWall.getPos())))) > Math.PI / 2)) {
-			System.out.println("пох, не мешает");
+			//System.out.println("пїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
 			RobotAI easyAI = new EasyRobotAI(super.target);
 			cmd = easyAI.nextCmd(robot, Converter.positionToMe(finish));
 		} else {
-			System.out.println("я яйцами пезднулся!");
+			//System.out.println("пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
 			double dw = (robot.angle - D.angle(Converter.positionToGleb(robot.getPos()), Converter.positionToGleb(lastWall.getPos())));
 		
 			if ((dw >= Math.PI / 2) /*&& (dw < Math.PI / 2 + eps)*/) {
@@ -66,9 +66,9 @@ public class EasyAIwithNoises extends SimpleAI {
 						- D.l(finish, Converter.positionToGleb(lastWall.getPos())) * D.l(finish, Converter.positionToGleb(lastWall.getPos())))
 						/ (-2 * D.l(finish, Converter.positionToGleb(lastWall.getPos()))
 								* D.l(Converter.positionToGleb(robot.getPos()), Converter.positionToGleb(lastWall.getPos()))));
-				System.out.println("Объезжай теперь, блядь");
+				//System.out.println("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ");
 				if (robot.maxSpeed / robot.maxRotationSpeed > radiuscirculation) {
-					System.out.println("сука");
+					//System.out.println("пїЅпїЅпїЅпїЅ");
 					/*cmd.rotationSpeed = robot.maxRotationSpeed;
 					cmd.speed = cmd.rotationSpeed * radiuscirculation;*/
 					cmd = new robot.Command(robot.maxRotationSpeed* radiuscirculation,
@@ -77,7 +77,7 @@ public class EasyAIwithNoises extends SimpleAI {
 				} else {
 					/*cmd.speed = robot.maxSpeed;
 					cmd.rotationSpeed = radiuscirculation / cmd.speed;*/
-					System.out.println(endAngle);
+					//System.out.println(endAngle);
 					cmd = new robot.Command(robot.maxSpeed,radiuscirculation /robot.maxSpeed,
 							D.w(endAngle, startAngle) *robot.maxSpeed/ (radiuscirculation ));
 				}
@@ -87,7 +87,7 @@ public class EasyAIwithNoises extends SimpleAI {
 				/*cmd.speed = 0;
 				cmd.rotationSpeed = Math.signum(Math.PI / 2 - dw) * robot.maxRotationSpeed;
 				cmd.time = (Math.PI / 2 - dw) / cmd.rotationSpeed;*/
-				System.out.println("Вертел я вас");
+				//System.out.println("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ");
 				cmd = new robot.Command(0,
 						  robot.maxRotationSpeed,
 						Math.abs(Angle.normalizer((Math.PI / 2 + eps - dw))) /( robot.maxRotationSpeed));
